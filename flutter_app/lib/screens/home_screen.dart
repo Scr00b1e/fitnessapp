@@ -38,10 +38,12 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Кольцевой индикатор шагов (строго по UX-схеме)
-              StepProgressIndicator(
-                currentSteps: 8423,
-                goalSteps: 10000,
-                period: _selectedPeriod,
+              Center(
+                child: StepProgressIndicator(
+                  currentSteps: 8423,
+                  goalSteps: 10000,
+                  period: _selectedPeriod,
+                ),
               ),
               
               const SizedBox(height: 20),
