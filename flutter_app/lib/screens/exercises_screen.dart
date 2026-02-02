@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_app/widgets/exercise_card.dart';
 
-class ExercisesScreen extends StatelessWidget {
+class ExercisesScreen extends StatefulWidget {
   const ExercisesScreen({super.key});
+
+  @override
+  State<ExercisesScreen> createState() => _ExercisesScreenState();
+}
+
+class _ExercisesScreenState extends State<ExercisesScreen> {
+  // Selected category filter
+  String selectedCategory = "Все";
 
   final List<Map<String, dynamic>> exercises = const [
   {
@@ -400,30 +408,65 @@ class ExercisesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Filtered exercises
+    final filteredExercises = selectedCategory == "Все"
+        ? exercises
+        : exercises
+            .where((exercise) => exercise["type"] == selectedCategory)
+            .toList();
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Физические упражнения'),
+        title: const Text("Физические упражнения"),
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: exercises.length,
-        itemBuilder: (context, index) {
-          final exercise = exercises[index];
 
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(12),
-              onTap: () => _showExerciseModal(context, exercise),
-              child: ExerciseCard(
-                name: exercise['name'],
-                type: exercise['type'],
-                duration: exercise['duration'],
-                description: exercise['description'],
+      body: Column(
+        children: [
+          // ✅ CATEGORY FILTER DROPDOWN
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: DropdownButtonFormField<String>(
+              value: selectedCategory,
+              decoration: InputDecoration(
+                labelText: "Категория",
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
               ),
+              items: const [
+                DropdownMenuItem(value: "Все", child: Text("Все")),
+                DropdownMenuItem(value: "Силовая", child: Text("Силовая")),
+                DropdownMenuItem(value: "Кардио", child: Text("Кардио")),
+                DropdownMenuItem(value: "Пресс", child: Text("Пресс")),
+                DropdownMenuItem(
+                    value: "Статическая", child: Text("Статическая")),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  selectedCategory = value!;
+                });
+              },
             ),
-          );
-        },
+          ),
+
+          // ✅ EXERCISES LIST
+          Expanded(
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: filteredExercises.length,
+              itemBuilder: (context, index) {
+                final exercise = filteredExercises[index];
+
+                return ExerciseCard(
+                  name: exercise["name"],
+                  type: exercise["type"],
+                  duration: exercise["duration"],
+                  description: exercise["description"],
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
