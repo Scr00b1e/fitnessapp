@@ -379,30 +379,13 @@ class ExercisesScreen extends StatelessWidget {
                     ],
 
                     // ACTIONS
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton.icon(
-                            onPressed: () => Navigator.pop(context),
-                            icon: const Icon(Icons.close),
-                            label: const Text('Закрыть'),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: ElevatedButton.icon(
-                            onPressed: () {
-                              // Пока заглушка, потом можно запуск таймера/тренировки
-                              Navigator.pop(context);
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Начать: $name')),
-                              );
-                            },
-                            icon: const Icon(Icons.play_arrow),
-                            label: const Text('Начать'),
-                          ),
-                        ),
-                      ],
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: () => Navigator.pop(context),
+                        icon: const Icon(Icons.close),
+                        label: const Text('Закрыть'),
+                      ),
                     ),
                   ],
                 ),
