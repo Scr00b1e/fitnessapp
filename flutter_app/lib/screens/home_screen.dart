@@ -3,7 +3,6 @@ import 'package:fitness_app/widgets/step_progress.dart';
 import 'package:fitness_app/services/weather_service.dart';
 import 'package:fitness_app/models/weather_now.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -45,9 +44,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   period: _selectedPeriod,
                 ),
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // Два информационных блока (строго по UX-схеме)
               Row(
                 children: [
@@ -86,7 +85,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       },
                     ),
                   ),
-
                   const SizedBox(width: 10),
                   Expanded(
                     child: _buildInfoCard(
@@ -98,9 +96,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               // Текст "Ударный день..." (строго по UX-схеме)
               const Text(
                 'Ударный день закрытия дневной нормы шагов',
@@ -110,24 +108,24 @@ class _HomeScreenState extends State<HomeScreen> {
                   color: Colors.blue,
                 ),
               ),
-              
+
               const SizedBox(height: 10),
-              
+
               // Маршруты активности (заглушка)
               _buildActivityRoutes(),
-              
+
               const SizedBox(height: 20),
-              
+
               // Переключение периодов (строго по UX-схеме)
               _buildPeriodSelector(),
-              
+
               const SizedBox(height: 20),
-              
+
               // График/диаграмма (заглушка)
               _buildChartPlaceholder(),
-              
+
               const SizedBox(height: 20),
-              
+
               // Кнопка перехода на страницу шагов
               ElevatedButton.icon(
                 onPressed: () {
@@ -232,17 +230,43 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildChartPlaceholder() {
-  // Фейковые данные под каждый период (0..100)
+    // Фейковые данные под каждый период (0..100)
     final Map<String, List<int>> fakeData = {
-      'day':   [20, 35, 55, 40, 70, 60, 85, 45, 30, 65, 50, 90],
-      'week':  [45, 60, 30, 80, 70, 55, 65],
+      'day': [20, 35, 55, 40, 70, 60, 85, 45, 30, 65, 50, 90],
+      'week': [45, 60, 30, 80, 70, 55, 65],
       'month': [30, 55, 40, 60, 35, 75, 50, 80, 45, 65, 90, 70],
     };
 
     final Map<String, List<String>> labels = {
-      'day':   ['6', '8', '10', '12', '14', '16', '18', '20', '22', '24', '2', '4'],
-      'week':  ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
-      'month': ['1', '4', '7', '10', '13', '16', '19', '22', '25', '28', '30', '31'],
+      'day': [
+        '6',
+        '8',
+        '10',
+        '12',
+        '14',
+        '16',
+        '18',
+        '20',
+        '22',
+        '24',
+        '2',
+        '4'
+      ],
+      'week': ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+      'month': [
+        '1',
+        '4',
+        '7',
+        '10',
+        '13',
+        '16',
+        '19',
+        '22',
+        '25',
+        '28',
+        '30',
+        '31'
+      ],
     };
 
     final data = fakeData[_selectedPeriod] ?? const [];
@@ -272,7 +296,6 @@ class _HomeScreenState extends State<HomeScreen> {
             style: const TextStyle(color: Colors.grey),
           ),
           const SizedBox(height: 12),
-
           SizedBox(
             height: 160,
             child: Row(
@@ -299,7 +322,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // LABEL
                         Text(
                           i < xLabels.length ? xLabels[i] : '',
-                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                          style:
+                              const TextStyle(fontSize: 11, color: Colors.grey),
                           overflow: TextOverflow.ellipsis,
                         ),
                       ],
@@ -309,27 +333,11 @@ class _HomeScreenState extends State<HomeScreen> {
               }),
             ),
           ),
-
           const SizedBox(height: 8),
-
-          // Легенда/подсказка
-          Row(
-            children: const [
-              Icon(Icons.info_outline, size: 16, color: Colors.grey),
-              SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  'Данные демонстрационные. Позже подключим реальные шаги/тренировки.',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ),
-            ],
-          ),
         ],
       ),
     );
   }
-
 
   void _showStepsAndClubScreen() {
     showModalBottomSheet(
@@ -347,29 +355,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 20),
-              
+
               // Данные из Samsung Health / Apple Fitness (заглушка)
               _buildHealthDataCard(
                 'Samsung Health',
                 Icons.phone_android,
                 'Шаги: 8423\nДистанция: 6.7 км',
               ),
-              
+
               const SizedBox(height: 10),
-              
+
               _buildHealthDataCard(
                 'Apple Fitness',
                 Icons.phone_iphone,
                 'Шаги: 7980\nДистанция: 6.3 км',
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               const Text(
                 'Занятия',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
-              
+
               Expanded(
                 child: ListView(
                   children: const [
@@ -408,41 +416,41 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-  
+
   String weatherCodeToRu(int code) {
-  switch (code) {
-    case 0:
-      return 'Ясно';
-    case 1:
-    case 2:
-      return 'Малооблачно';
-    case 3:
-      return 'Облачно';
-    case 45:
-    case 48:
-      return 'Туман';
-    case 51:
-    case 53:
-    case 55:
-      return 'Морось';
-    case 61:
-    case 63:
-    case 65:
-      return 'Дождь';
-    case 71:
-    case 73:
-    case 75:
-      return 'Снег';
-    case 80:
-    case 81:
-    case 82:
-      return 'Ливни';
-    case 95:
-    case 96:
-    case 99:
-      return 'Гроза';
-    default:
-      return 'Неизвестно';
+    switch (code) {
+      case 0:
+        return 'Ясно';
+      case 1:
+      case 2:
+        return 'Малооблачно';
+      case 3:
+        return 'Облачно';
+      case 45:
+      case 48:
+        return 'Туман';
+      case 51:
+      case 53:
+      case 55:
+        return 'Морось';
+      case 61:
+      case 63:
+      case 65:
+        return 'Дождь';
+      case 71:
+      case 73:
+      case 75:
+        return 'Снег';
+      case 80:
+      case 81:
+      case 82:
+        return 'Ливни';
+      case 95:
+      case 96:
+      case 99:
+        return 'Гроза';
+      default:
+        return 'Неизвестно';
+    }
   }
-}
 }
