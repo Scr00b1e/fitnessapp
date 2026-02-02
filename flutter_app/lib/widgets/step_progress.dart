@@ -5,6 +5,7 @@ class StepProgressIndicator extends StatelessWidget {
   final int goalSteps;
   final String period;
 
+  // 🔥 Fake calories (можно передавать параметром, но для MVP посчитаем тут)
   const StepProgressIndicator({
     super.key,
     required this.currentSteps,
@@ -14,83 +15,71 @@ class StepProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double progress = goalSteps > 0 ? currentSteps / goalSteps : 0;
-    if (progress > 1) progress = 1;
+    final stepsProgress = (currentSteps / goalSteps).clamp(0.0, 1.0);
 
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.blue[50],
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: Column(
+    // ✅ Фейковые калории: например 0.04 ккал на шаг (просто заглушка)
+    final fakeCalories = (currentSteps * 0.04).round();
+    // ✅ Фейковый прогресс калорий: пусть "цель" 500 ккал
+    final caloriesGoal = 500;
+    final caloriesProgress = (fakeCalories / caloriesGoal).clamp(0.0, 1.0);
+
+    return SizedBox(
+      width: 220,
+      height: 220,
+      child: Stack(
+        alignment: Alignment.center,
         children: [
-          Text(
-            '${_getPeriodText(period)} шаги',
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+          // OUTER CIRCLE - Steps
+          SizedBox(
+            width: 220,
+            height: 220,
+            child: CircularProgressIndicator(
+              value: stepsProgress,
+              strokeWidth: 14,
+              backgroundColor: Colors.grey.shade200,
+              color: Colors.blue,
+              strokeCap: StrokeCap.round,
             ),
           ),
-          const SizedBox(height: 10),
-          Stack(
-            alignment: Alignment.center,
+
+          // INNER CIRCLE - Calories 🔴
+          SizedBox(
+            width: 140,
+            height: 140,
+            child: CircularProgressIndicator(
+              value: caloriesProgress,
+              strokeWidth: 12,
+              backgroundColor: Colors.red.shade50,
+              color: Colors.red,
+              strokeCap: StrokeCap.round,
+            ),
+          ),
+
+          // CENTER TEXT
+          Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                width: 200,
-                height: 200,
-                child: CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 15,
-                  backgroundColor: Colors.grey[300],
-                  valueColor: AlwaysStoppedAnimation<Color>(
-                    progress >= 1 ? Colors.green : Colors.blue,
-                  ),
-                ),
+              Text(
+                '$currentSteps',
+                style: const TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
               ),
-              Column(
-                children: [
-                  Text(
-                    currentSteps.toString(),
-                    style: const TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    '/ $goalSteps',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    '${(progress * 100).toStringAsFixed(1)}%',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
+              const Text(
+                'шагов',
+                style: TextStyle(color: Colors.grey),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                '$fakeCalories ккал',
+                style: const TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.red,
+                ),
               ),
             ],
           ),
         ],
       ),
     );
-  }
-
-  String _getPeriodText(String period) {
-    switch (period) {
-      case 'day':
-        return 'Дневная норма';
-      case 'week':
-        return 'Недельная норма';
-      case 'month':
-        return 'Месячная норма';
-      default:
-        return 'Дневная норма';
-    }
   }
 }
