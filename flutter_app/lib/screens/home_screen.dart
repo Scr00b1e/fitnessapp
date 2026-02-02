@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fitness_app/widgets/step_progress.dart';
+import 'package:fitness_app/services/weather_service.dart';
+import 'package:fitness_app/models/weather_now.dart';
+
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,6 +13,16 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String _selectedPeriod = 'day'; // Строго по UX-схеме: день/неделя/месяц
+
+  late final WeatherService _weatherService;
+  late Future<WeatherNow> _weatherFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _weatherService = WeatherService();
+    _weatherFuture = _weatherService.fetchBishkekNow();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +50,41 @@ class _HomeScreenState extends State<HomeScreen> {
               Row(
                 children: [
                   Expanded(
-                    child: _buildInfoCard(
-                      icon: Icons.cloud,
-                      title: 'Погода',
-                      subtitle: '+18°C, Солнечно',
-                      color: Colors.blue[50]!,
+                    child: FutureBuilder<WeatherNow>(
+                      future: _weatherFuture,
+                      builder: (context, snap) {
+                        if (snap.connectionState == ConnectionState.waiting) {
+                          return _buildInfoCard(
+                            icon: Icons.cloud,
+                            title: 'Погода',
+                            subtitle: 'Загрузка...',
+                            color: Colors.blue[50]!,
+                          );
+                        }
+
+                        if (snap.hasError) {
+                          return _buildInfoCard(
+                            icon: Icons.cloud_off,
+                            title: 'Погода',
+                            subtitle: 'Ошибка загрузки',
+                            color: Colors.blue[50]!,
+                          );
+                        }
+
+                        final w = snap.data!;
+                        final desc = weatherCodeToRu(w.weatherCode);
+                        final temp = w.temperatureC.toStringAsFixed(0);
+
+                        return _buildInfoCard(
+                          icon: Icons.cloud,
+                          title: 'Погода (Бишкек)',
+                          subtitle: '$temp°C, $desc',
+                          color: Colors.blue[50]!,
+                        );
+                      },
                     ),
                   ),
+
                   const SizedBox(width: 10),
                   Expanded(
                     child: _buildInfoCard(
@@ -286,4 +327,41 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  
+  String weatherCodeToRu(int code) {
+  switch (code) {
+    case 0:
+      return 'Ясно';
+    case 1:
+    case 2:
+      return 'Малооблачно';
+    case 3:
+      return 'Облачно';
+    case 45:
+    case 48:
+      return 'Туман';
+    case 51:
+    case 53:
+    case 55:
+      return 'Морось';
+    case 61:
+    case 63:
+    case 65:
+      return 'Дождь';
+    case 71:
+    case 73:
+    case 75:
+      return 'Снег';
+    case 80:
+    case 81:
+    case 82:
+      return 'Ливни';
+    case 95:
+    case 96:
+    case 99:
+      return 'Гроза';
+    default:
+      return 'Неизвестно';
+  }
+}
 }
