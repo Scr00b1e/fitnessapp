@@ -457,11 +457,18 @@ class _ExercisesScreenState extends State<ExercisesScreen> {
               itemBuilder: (context, index) {
                 final exercise = filteredExercises[index];
 
-                return ExerciseCard(
-                  name: exercise["name"],
-                  type: exercise["type"],
-                  duration: exercise["duration"],
-                  description: exercise["description"],
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(12),
+                    onTap: () => _showExerciseModal(context, exercise),
+                    child: ExerciseCard(
+                      name: exercise["name"],
+                      type: exercise["type"],
+                      duration: exercise["duration"],
+                      description: exercise["description"],
+                    ),
+                  ),
                 );
               },
             ),
