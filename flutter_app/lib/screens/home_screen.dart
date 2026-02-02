@@ -230,25 +230,104 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget _buildChartPlaceholder() {
+  // Фейковые данные под каждый период (0..100)
+    final Map<String, List<int>> fakeData = {
+      'day':   [20, 35, 55, 40, 70, 60, 85, 45, 30, 65, 50, 90],
+      'week':  [45, 60, 30, 80, 70, 55, 65],
+      'month': [30, 55, 40, 60, 35, 75, 50, 80, 45, 65, 90, 70],
+    };
+
+    final Map<String, List<String>> labels = {
+      'day':   ['6', '8', '10', '12', '14', '16', '18', '20', '22', '24', '2', '4'],
+      'week':  ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'],
+      'month': ['1', '4', '7', '10', '13', '16', '19', '22', '25', '28', '30', '31'],
+    };
+
+    final data = fakeData[_selectedPeriod] ?? const [];
+    final xLabels = labels[_selectedPeriod] ?? const [];
+
     return Container(
-      height: 200,
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey[300]!),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
       ),
-      child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.bar_chart, size: 50, color: Colors.grey),
-            SizedBox(height: 10),
-            Text('График активности'),
-            Text('(День/Неделя/Месяц)', style: TextStyle(color: Colors.grey)),
-          ],
-        ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'График активности',
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            _selectedPeriod == 'day'
+                ? 'Почасовая активность (фейк)'
+                : _selectedPeriod == 'week'
+                    ? 'Активность по дням недели (фейк)'
+                    : 'Активность за месяц (фейк)',
+            style: const TextStyle(color: Colors.grey),
+          ),
+          const SizedBox(height: 12),
+
+          SizedBox(
+            height: 160,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: List.generate(data.length, (i) {
+                final v = data[i].clamp(0, 100); // 0..100
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // BAR
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          curve: Curves.easeOut,
+                          height: 1.3 * v.toDouble(), // 0..130px
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.blue.withOpacity(0.8),
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        // LABEL
+                        Text(
+                          i < xLabels.length ? xLabels[i] : '',
+                          style: const TextStyle(fontSize: 11, color: Colors.grey),
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          // Легенда/подсказка
+          Row(
+            children: const [
+              Icon(Icons.info_outline, size: 16, color: Colors.grey),
+              SizedBox(width: 6),
+              Expanded(
+                child: Text(
+                  'Данные демонстрационные. Позже подключим реальные шаги/тренировки.',
+                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
+
 
   void _showStepsAndClubScreen() {
     showModalBottomSheet(
