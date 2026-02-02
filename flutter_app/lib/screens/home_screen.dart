@@ -289,10 +289,10 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 4),
           Text(
             _selectedPeriod == 'day'
-                ? 'Почасовая активность (фейк)'
+                ? 'Почасовая активность'
                 : _selectedPeriod == 'week'
-                    ? 'Активность по дням недели (фейк)'
-                    : 'Активность за месяц (фейк)',
+                    ? 'Активность по дням недели'
+                    : 'Активность за месяц',
             style: const TextStyle(color: Colors.grey),
           ),
           const SizedBox(height: 12),
