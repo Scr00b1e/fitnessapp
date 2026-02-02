@@ -1,0 +1,39 @@
+ПЕРВАЯ КОНСОЛЬ:
+
+cd C:\Users\Paltirama\Desktop\FitnessApp\backend
+
+py main.py
+
+ОБНОВИТЬ IP В lib/utils/constants.dart
+class Constants {
+  static const String baseUrl = 'http://ЗАМЕНИТЬ:8000';
+}
+
+
+
+
+. Очистите кэш:
+bash
+cd C:\Users\Paltirama\Desktop\FitnessApp\flutter_app
+flutter clean
+2. Удалите старую базу данных:
+bash
+cd C:\Users\Paltirama\Desktop\FitnessApp\backend
+del fitness_data.db
+3. Перезапустите сервер:
+bash
+py main.py
+
+
+
+ВТОРАЯ КОНСОЛЬ
+
+cd C:\Users\Paltirama\Desktop\FitnessApp\flutter_app
+
+flutter clean
+
+flutter pub get
+
+flutter run
+
+https://chat.deepseek.com/share/7tfkeh8bhoyv9z9ysz
